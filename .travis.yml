@@ -1,6 +1,9 @@
 sudo: required
 services:
   - docker
+language: python               # Add language specification
+python:                        # Specify Python version
+  - "3.8"                      # Use Python 3.8 or later
 env:
   global:
     - SHA=$(git rev-parse HEAD)
@@ -16,6 +19,7 @@ before_install:
   - gcloud container clusters get-credentials multi-cluster
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker build -t okitsnotok/react-test -f ./client/Dockerfile.dev ./client
+  - export CLOUDSDK_PYTHON=$(which python3)
 
 script:
   - docker run -e CI=true okitsnotok/react-test npm test
